@@ -64,3 +64,15 @@ $ forge --help
 $ anvil --help
 $ cast --help
 ```
+
+
+TODO
+
+1. create dex using uniswap interface
+2. v3 swap
+3. v3 liquidity
+4. v3 flash loan
+5. v3 flash swap arbitrage
+6. deployment scripts
+7. 100% coverage tests
+8. testnet deployment
