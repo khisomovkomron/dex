@@ -36,6 +36,29 @@ contract Swap {
 
     }
 
-    function swapExactOutputSingleHop() external {}
+    function swapExactOutputSingleHop(
+        uint256 amountOut, 
+        uint256 amountInMax
+    ) external {
+        weth.transferFrom(msg.sender, address(this), amountInMax);
+        weth.approve(address(router), amountInMax);
+
+        ISwapRouter02.ExactOutputSingleParams memory params = ISwapRouter02.ExactOutputSingleParams({
+            tokenIn: WETH,
+            tokenOut: DAI,
+            fee: 3000,
+            recipient: msg.sender,
+            amountOut: amountOut,
+            amountInMaximum: amountInMax,
+            sqrtPriceLimitX96: 0
+        });
+
+        uint256 amountIn = router.exactOutputSingle(params);
+
+        if (amountIn < amountInMax) {
+            weth.approve(address(router), 0);
+            weth.transfer(msg.sender, amountInMax - amountIn);
+        }
+    }
     
 }
