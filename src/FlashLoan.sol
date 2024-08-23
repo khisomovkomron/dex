@@ -32,4 +32,27 @@ contract FlashLoan {
 
         IUniswapV3Pool(pool).flash(address(this), amount0, amount1, data);
     }
+
+    function uniswapV3FlashCallback(
+        uint256 fee0,
+        uint256 fee1, 
+        bytes  calldata data
+    ) external {
+        require(msg.sender == address(pool), "Not authorized");
+        FlashCallbackData memory decoded = abi.decode(data, (FlashCallbackData));
+
+        if (fee0 > 0) {
+            token0.transferFrom(decoded.caller, address(this), fee0);
+        }
+        if (fee1 > 0) {
+            token1.transferFrom(decoded.caller, address(this), fee1);
+        }
+
+        if (fee0 > 0) {
+            token0.transfer(address(pool), decoded.amount0 + fee0);
+        }
+        if (fee1 > 0) {
+            token1.transfer(address(pool), decoded.amount1 + fee1);
+        }
+    }
 }
