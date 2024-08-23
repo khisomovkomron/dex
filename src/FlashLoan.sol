@@ -17,8 +17,8 @@ contract FlashLoan {
 
     constructor(address _pool) {
         pool = IUniswapV3Pool(_pool);
-        token0 = IERC20(pool.token0);
-        token1 = IERC20(pool.token1);
+        token0 = IERC20(pool.token0());
+        token1 = IERC20(pool.token1());
     }
 
     function flash(uint256 amount0, uint256 amount1) external {
